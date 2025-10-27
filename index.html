@@ -170,22 +170,6 @@
 
                 return res;
             }
-            each = (cb) => {
-                let _node = this.startNode;
-                let stack = [];
-                let dfs = (_node) => {
-                    stack.push(_node.keyCh);
-                    if (_node.value) {
-                        cb(stack.join(""), _node.value);
-                    }
-                    _node.childs.forEach((child) => {
-                        dfs(child);
-                    });
-                    stack.pop();
-                };
-
-                dfs(_node);
-            }
         }
 
         var WordDictionary = function () {
@@ -226,18 +210,6 @@
             let ss = str[0];
             let rr = str[str.length - 1];
             let arr = [];
-            for (let i = 0; i <= str.length - 1; i++) {
-                let t = [];
-                for (let j = 0; j <= str.length - 1 + 4; j++) {
-                    if (str.length - 1 < j || i == j) {
-                        t.push('.')
-                    }
-                    else {
-                        t.push(str[j])
-                    }
-                    arr.push(t.join(""))
-                }
-            }
             for (let i = 0; i <= str.length - 1; i++) {
                 let t = [];
                 for (let j = 0; j <= str.length - 1 + 4; j++) {
