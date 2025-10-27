@@ -238,6 +238,21 @@
                     arr.push(t.join(""))
                 }
             }
+            for (let i = 0; i <= str.length - 1; i++) {
+                let t = [];
+                for (let j = 0; j <= str.length - 1 + 4; j++) {
+                    if (str.length - 1 < j || i == j - 1 || i == j + 1) {
+                        t.push('.')
+                    }
+                    else if (i == j) {
+                        //
+                    }
+                    else {
+                        t.push(str[j])
+                    }
+                    arr.push(t.join(""))
+                }
+            }
 
             let res = arr.map((c) => {
                 return obj.search(c);
@@ -245,7 +260,7 @@
             let r = {};
             for (let i = 0; i <= res.length - 1; i++) {
                 for (let j = 0; j <= res[i].length - 1; j++) {
-                    if (res[i][j].length >= str.length) {
+                    if (res[i][j].length >= str.length - 1) {
                         r[res[i][j]] = true;
                     }
                 }
@@ -258,6 +273,8 @@
                 if (startsWithA && !startsWithB) return -1;
                 if (!startsWithA && startsWithB) return 1;
                 return a.localeCompare(b);
+            }).sort((a, b) => {
+                return a === str.join("") && b !== str.join("") ? -1 : 1;
             });
 
 
