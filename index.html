@@ -1,0 +1,283 @@
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">city fuzzy-serch</span>
+            </a>
+
+            <ul class="nav nav-pills">
+            </ul>
+        </header>
+        <div class="fff-container">
+            <div class="fff">
+                <div class="fff--spans">
+                    <!--
+                            <span class="fff&#45;&#45;span">DC1 <span class="fff&#45;&#45;x">X</span></span>
+                            <span class="fff&#45;&#45;span">DC2 <span class="fff&#45;&#45;x">X</span></span>
+                -->
+                </div>
+                <input autoComplete="off" onKeyUp="build(event.target.value)" class="fff--select">
+            </div>
+            <div class="fff--list">
+                <ul>
+                    <li>
+                        moskow
+                    </li>
+                    <li>
+                        spb
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <style>
+        .fff--span {
+            z-index: 999;
+            padding: 10px;
+            background-color: gray;
+            margin: 4px;
+        }
+
+        .fff--spans {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .fff {
+            border: 1px solid blue;
+            padding: 10px;
+            display: inline-flex;
+            width: 400px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .fff--select {
+            border: 0px;
+        }
+
+        .fff--select:focus-visible {
+            border: 0px !important;
+            outline: none;
+        }
+
+        .fff--x {
+            cursor: pointer;
+        }
+
+        .fff--list {
+            height: 300px;
+            overflow: auto;
+        }
+
+        .fff--list {
+            width: 400px;
+            border: 1px solid black;
+        }
+    </style>
+
+    <script>
+        //my leetcode solution:
+        //https://leetcode.com/problems/design-add-and-search-words-data-structure/submissions/1210851223
+        class node {
+            keyCh = "";
+            childs = [];
+            value = "";
+            constructor() { }
+        }
+
+        class map {
+            startNode;
+
+            constructor() {
+                this.startNode = new node();
+            }
+
+            set = (key, value) => {
+                key = key.split("");
+                let _node = this.startNode;
+                while (key.length) {
+                    let ch = key.shift();
+                    let checkNode = (_node) => {
+                        for (let i = 0; i <= _node.childs?.length - 1; i++) {
+                            if (_node.childs[i].keyCh === ch) {
+                                return _node.childs[i];
+                            }
+                        }
+                        return null;
+                    }
+                    let c = checkNode(_node);
+                    let prevNode = _node;
+                    if (!c) {
+                        _node = new node();
+                        _node.keyCh = ch;
+                        prevNode.childs.push(_node);
+                    } else {
+                        _node = c;
+                    }
+                }
+                _node.value = value;
+            }
+
+            get = (key) => {
+                key = key.split("");
+                let _node = this.startNode;
+                let res = [];
+                let stack = 0;
+                let sstack = [];
+                let kek = (ch, _node) => {
+                    sstack.push(_node.keyCh)
+                    if (stack == key.length) {
+                        if (_node.value) {
+                            res.push(sstack.join(""));
+                        }
+                    }
+                    let r = []
+                    for (let i = 0; i <= _node.childs?.length - 1; i++) {
+                        if (_node.childs[i].keyCh === ch || ch == '.') {
+                            r.push(_node.childs[i]);
+                        }
+                    }
+                    if (r.length > 1) {
+                        r.forEach((d) => {
+                            stack++;
+                            kek(key[stack], d)
+                            stack--;
+                        });
+                    } else {
+                        if (!r.length) {
+                            sstack.pop();
+                            return null
+                        }
+                        stack++
+                        kek(key[stack], r[0])
+                        stack--
+                    }
+                    sstack.pop();
+                }
+                kek(key[stack], _node)
+
+                return res;
+            }
+            each = (cb) => {
+                let _node = this.startNode;
+                let stack = [];
+                let dfs = (_node) => {
+                    stack.push(_node.keyCh);
+                    if (_node.value) {
+                        cb(stack.join(""), _node.value);
+                    }
+                    _node.childs.forEach((child) => {
+                        dfs(child);
+                    });
+                    stack.pop();
+                };
+
+                dfs(_node);
+            }
+        }
+
+        var WordDictionary = function () {
+            WordDictionary.prototype.c = new map();
+        };
+
+        /** 
+         * @param {string} word
+         * @return {void}
+         */
+        WordDictionary.prototype.addWord = function (word) {
+            WordDictionary.prototype.c.set(word, true)
+
+        };
+
+        /** 
+         * @param {string} word
+         * @return {boolean}
+         */
+        WordDictionary.prototype.search = function (word) {
+            let a = WordDictionary.prototype.c.get(word);
+            return a
+        };
+        var arr = [];
+        var obj = new WordDictionary();
+        fetch('./regions.json')
+            .then(response => response.json())
+            .then(data => {
+                data = data.data
+                data.forEach((item) => {
+                    obj.addWord(item.RegionName)
+                });
+            });
+
+        function build(str) {
+            str = str.split("");
+            str[0] = str[0].toUpperCase();
+            let ss = str[0];
+            let rr = str[str.length - 1];
+            let arr = [];
+            for (let i = 0; i <= str.length - 1; i++) {
+                let t = [];
+                for (let j = 0; j <= str.length - 1 + 4; j++) {
+                    if (str.length - 1 < j || i == j) {
+                        t.push('.')
+                    }
+                    else {
+                        t.push(str[j])
+                    }
+                    arr.push(t.join(""))
+                }
+            }
+            for (let i = 0; i <= str.length - 1; i++) {
+                let t = [];
+                for (let j = 0; j <= str.length - 1 + 4; j++) {
+                    if (str.length - 1 < j || i == j || i == j - 1 || i == j + 1) {
+                        t.push('.')
+                    }
+                    else {
+                        t.push(str[j])
+                    }
+                    arr.push(t.join(""))
+                }
+            }
+            let res = arr.map((c) => {
+                return obj.search(c);
+            })
+            let r = {};
+            for (let i = 0; i <= res.length - 1; i++) {
+                for (let j = 0; j <= res[i].length - 1; j++) {
+                    if (res[i][j].length >= str.length) {
+                        r[res[i][j]] = true;
+                    }
+                }
+            }
+            let cities = Object.keys(r)
+            cities = cities.sort((a, b) => {
+                const startsWithA = a[0] === ss && a[a.length - 1] === rr;
+                const startsWithB = b[0] === ss && b[b.length - 1] === rr;
+
+                if (startsWithA && !startsWithB) return -1;
+                if (!startsWithA && startsWithB) return 1;
+                return a.localeCompare(b);
+            });
+
+
+
+            document.querySelector('.fff--list').innerHTML = `<ul>` + cities.reduce((acc, a) => {
+                return acc += `<li>${a}</li>`
+            }, '') + "</ul>";
+        }
+
+    </script>
+
+</html>
