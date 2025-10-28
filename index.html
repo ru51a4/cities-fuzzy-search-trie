@@ -217,7 +217,7 @@
                         let prev = 0;
                         for (let g = 0; g <= str.length - 1; g++) {
                             if (i == g || j == g || k == g) {
-                                if (prev - 1 != g && prev + 1 != g) {
+                                if (str.length <= 5 || (prev - 1 != g && prev + 1 != g)) {
                                     t.push(str[g])
                                     prev = g;
                                 }
