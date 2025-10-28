@@ -211,39 +211,27 @@
             let rr = str[str.length - 1];
             let arr = [];
             for (let i = 0; i <= str.length - 1; i++) {
-                let t = [];
-                for (let j = 0; j <= str.length - 1 + 4; j++) {
-                    if (str.length - 1 < j || i == j || i == j - 1 || i == j + 1) {
-                        t.push('.')
+                for (let j = 0; j <= str.length - 1; j++) {
+                    for (let k = 0; k <= str.length - 1; k++) {
+                        let t = [];
+                        for (let g = 0; g <= str.length - 1; g++) {
+                            if (i == g || j == g || k == g) {
+                                t.push(str[g])
+                            }
+                            else {
+                                t.push('.')
+                            }
+
+                        }
+                        let r = t.filter((c) => c != '.');
+                        if (r.length >= 3) {
+                            arr.push(t.join(""))
+                        }
                     }
-                    else {
-                        t.push(str[j])
-                    }
-                    let r = t.filter((c) => c != '.');
-                    if (r.length >= 3) {
-                        arr.push(t.join(""))
-                    }
+
                 }
             }
-            for (let i = 0; i <= str.length - 1; i++) {
-                let t = [];
-                for (let j = 0; j <= str.length - 1 + 4; j++) {
-                    if (str.length - 1 < j || i == j - 1 || i == j + 1) {
-                        t.push('.')
-                    }
-                    else if (i == j) {
-                        t.push('.')
-                        t.push('.')
-                    }
-                    else {
-                        t.push(str[j])
-                    }
-                    let r = t.filter((c) => c != '.');
-                    if (r.length >= 3) {
-                        arr.push(t.join(""))
-                    }
-                }
-            }
+            console.log({ a: JSON.stringify(arr) })
             for (let i = 0; i <= str.length - 1; i++) {
                 let t = [];
                 for (let j = 0; j <= str.length - 1 + 4; j++) {
