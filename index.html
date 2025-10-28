@@ -214,9 +214,13 @@
                 for (let j = i; j <= str.length - 1; j++) {
                     for (let k = j; k <= str.length - 1; k++) {
                         let t = [];
+                        let prev = 0;
                         for (let g = 0; g <= str.length - 1; g++) {
                             if (i == g || j == g || k == g) {
-                                t.push(str[g])
+                                if (prev - 1 != g && prev + 1 != g) {
+                                    t.push(str[g])
+                                    prev = g;
+                                }
                             }
                             else {
                                 t.push('.')
