@@ -261,10 +261,14 @@
             for (let i = 0; i <= res.length - 1; i++) {
                 for (let j = 0; j <= res[i].length - 1; j++) {
                     if (res[i][j].length >= str.length - 1) {
-                        r[res[i][j]] = true;
+                        if (!r[res[i][j]]) {
+                            r[res[i][j]] = 0;
+                        }
+                        r[res[i][j]]++;
                     }
                 }
             }
+
             let cities = Object.keys(r)
             cities = cities.sort((a, b) => {
                 const startsWithA = a[0] === ss && a[a.length - 1] === rr;
@@ -272,7 +276,7 @@
 
                 if (startsWithA && !startsWithB) return -1;
                 if (!startsWithA && startsWithB) return 1;
-                return a.localeCompare(b);
+                return r[a] < r[b] ? 1 : -1;
             }).sort((a, b) => {
                 return a === str.join("") && b !== str.join("") ? -1 : 1;
             });
